@@ -7,7 +7,7 @@ public interface Transaction {
     public void Withdraw(Account account);
     public void save(Account account);
     public long consult(Account account);
-    public List<TransactionImpl> showHistory(Account account);
+    public List<Transaction> showHistory(Account account);
 
 
     

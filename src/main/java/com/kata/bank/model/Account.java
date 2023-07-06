@@ -16,10 +16,10 @@ public class Account {
 
     private long number;
     private Client client;
-    private List<TransactionImpl> transactions;
+    private List<Transaction> transactions;
     private long solde;
 
-    public Account(long number, Client client, List<Transaction> transactions ){
+    public Account(long number, Client client){
 
         this.number = number;
         this.client = client;
