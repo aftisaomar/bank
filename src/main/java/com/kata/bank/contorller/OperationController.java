@@ -19,8 +19,8 @@ import com.kata.bank.model.Account;
 import com.kata.bank.model.Bank;
 import com.kata.bank.model.Client;
 import com.kata.bank.model.Operation;
-import com.kata.bank.service.Transaction;
-import com.kata.bank.service.TransactionImpl;
+import com.kata.bank.service.OperationService;
+import com.kata.bank.service.OperationServiceImp;
 
 import jakarta.annotation.PostConstruct;
 
@@ -29,7 +29,7 @@ import jakarta.annotation.PostConstruct;
 @RestController
 public class OperationController {
 
-    private Bank bank;
+    private  Bank bank;
 
     @PostConstruct
 	public void bankInit()
@@ -63,7 +63,7 @@ public class OperationController {
 
 
     @GetMapping("/transaction/{id}")
-    public ResponseEntity<List<Transaction>> getTRansaction(@PathVariable("id") Long id){
+    public ResponseEntity<List<OperationService>> getTRansaction(@PathVariable("id") Long id){
 
         Account a = bank.getAccountList().stream().filter(account -> account.getNumber() == id).findFirst().orElse(null);
 
@@ -79,14 +79,14 @@ public class OperationController {
     }
 
     @RequestMapping(value = "/transaction/{operation}/{amount}", method=RequestMethod.POST)
-    public ResponseEntity<TransactionImpl> perfomTransaction(@RequestBody Account inputAccount, @PathVariable String operation, long amount){
+    public ResponseEntity<OperationServiceImp> perfomTransaction(@RequestBody Account inputAccount, @PathVariable String operation, long amount){
 
         Operation op = Operation.valueOf(operation);
         Account currentAccount = bank.getAccountList().stream().filter(account -> account.getNumber() == inputAccount.getNumber()).findFirst().orElse(null);
 
         if(currentAccount != null){
 
-            TransactionImpl transaction = new TransactionImpl(op, amount, new Date());
+            OperationServiceImp transaction = new OperationServiceImp(op, amount, new Date());
 
             switch (op) {
             case DEPOSIT:
