@@ -1,5 +1,8 @@
 package com.kata.bank.model;
 
+import lombok.Getter;
+
+@Getter
 public enum Operation {
 
     DEPOSIT("deposit"),

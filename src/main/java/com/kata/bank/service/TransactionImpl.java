@@ -22,7 +22,7 @@ public class TransactionImpl implements Transaction {
     }
 
     @Override
-    public void Withdraw(Account account) throws RuntimeException {
+    public void withdraw(Account account) throws RuntimeException {
 
         if(account.getSolde()<amount)
             throw new RuntimeException("You cannot withdraw "+amount+" sold insufficient");
@@ -47,7 +47,7 @@ public class TransactionImpl implements Transaction {
     }
 
     @Override
-    public List<TransactionImpl> showHistory(Account account) {
+    public List<Transaction> showHistory(Account account) {
 
         return account.getTransactions();
         
