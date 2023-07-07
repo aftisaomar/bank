@@ -3,6 +3,8 @@ package com.kata.bank.service;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.kata.bank.model.Account;
 import com.kata.bank.model.Operation;
 import com.kata.bank.model.Transaction;
@@ -10,6 +12,7 @@ import com.kata.bank.model.Transaction;
 import lombok.Data;
 
 @Data
+@Service
 public class OperationServiceImp implements OperationService {
 
     private Transaction transaction;
@@ -47,7 +50,7 @@ public class OperationServiceImp implements OperationService {
     }
 
     @Override
-    public List<OperationService> showHistory(Account account) {
+    public List<Transaction> showHistory(Account account) {
 
         return account.getTransactions();
         

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +20,7 @@ import com.kata.bank.model.Account;
 import com.kata.bank.model.Bank;
 import com.kata.bank.model.Client;
 import com.kata.bank.model.Operation;
+import com.kata.bank.model.Transaction;
 import com.kata.bank.service.OperationService;
 import com.kata.bank.service.OperationServiceImp;
 
@@ -30,6 +32,9 @@ import jakarta.annotation.PostConstruct;
 public class OperationController {
 
     private  Bank bank;
+
+    @Autowired
+    private OperationServiceImp operationServiceImp;
 
     @PostConstruct
 	public void bankInit()
@@ -63,7 +68,7 @@ public class OperationController {
 
 
     @GetMapping("/transaction/{id}")
-    public ResponseEntity<List<OperationService>> getTRansaction(@PathVariable("id") Long id){
+    public ResponseEntity<List<Transaction>> getTRansaction(@PathVariable("id") Long id){
 
         Account a = bank.getAccountList().stream().filter(account -> account.getNumber() == id).findFirst().orElse(null);
 
@@ -79,29 +84,29 @@ public class OperationController {
     }
 
     @RequestMapping(value = "/transaction/{operation}/{amount}", method=RequestMethod.POST)
-    public ResponseEntity<OperationServiceImp> perfomTransaction(@RequestBody Account inputAccount, @PathVariable String operation, long amount){
+    public ResponseEntity<Transaction> perfomTransaction(@RequestBody Account inputAccount, @PathVariable String operation, long amount){
 
         Operation op = Operation.valueOf(operation);
         Account currentAccount = bank.getAccountList().stream().filter(account -> account.getNumber() == inputAccount.getNumber()).findFirst().orElse(null);
 
         if(currentAccount != null){
 
-            OperationServiceImp transaction = new OperationServiceImp(op, amount, new Date());
+            Transaction transaction = new Transaction(op, amount, new Date());
 
             switch (op) {
             case DEPOSIT:
-                transaction.save(currentAccount);
+                operationServiceImp.save(currentAccount);
                 currentAccount.getTransactions().add(transaction);
                 break;
             case WITHDRAW:
-                transaction.withdraw(currentAccount);
+                operationServiceImp.withdraw(currentAccount);
                 currentAccount.getTransactions().add(transaction);
             case CONSULT:
-                 transaction.consult(currentAccount);
+                 operationServiceImp.consult(currentAccount);
                  currentAccount.getTransactions().add(transaction);
                  break;
             case HISTORY:
-                transaction.showHistory(currentAccount);
+                operationServiceImp.showHistory(currentAccount);
                 currentAccount.getTransactions().add(transaction);
                 break;
             default:
