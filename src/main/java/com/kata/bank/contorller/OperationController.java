@@ -55,7 +55,13 @@ public class OperationController {
     @GetMapping("/bank")
     public ResponseEntity<Bank> getBank(){
 
-        return new ResponseEntity<>(this.bank, HttpStatus.OK);
+        if(this.bank!=null){
+            return new ResponseEntity<>(this.bank, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        
 
     }
 
@@ -83,7 +89,7 @@ public class OperationController {
         
     }
 
-    @RequestMapping(value = "/transaction/{operation}/{amount}", method=RequestMethod.POST)
+    @PostMapping(value = "/transaction/{operation}/{amount}")
     public ResponseEntity<Transaction> perfomTransaction(@RequestBody Account inputAccount, @PathVariable String operation, long amount){
 
         Operation op = Operation.valueOf(operation);
