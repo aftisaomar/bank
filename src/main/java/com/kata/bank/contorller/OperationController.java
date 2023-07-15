@@ -21,7 +21,6 @@ import com.kata.bank.model.Bank;
 import com.kata.bank.model.Client;
 import com.kata.bank.model.Operation;
 import com.kata.bank.model.Transaction;
-import com.kata.bank.service.OperationService;
 import com.kata.bank.service.OperationServiceImp;
 
 import jakarta.annotation.PostConstruct;
@@ -61,83 +60,59 @@ public class OperationController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        
-
     }
 
     @GetMapping("/account")
     public ResponseEntity<List<Account>> getAllAccounts(){
 
-        return new ResponseEntity<>(this.bank.getAccountList(), HttpStatus.OK);
+        return new ResponseEntity<>(operationServiceImp.getAllAccount(bank), HttpStatus.OK);
 
     }
 
 
-    @GetMapping("/transaction/{id}")
-    public ResponseEntity<List<Transaction>> getTRansaction(@PathVariable("id") Long id){
+    // @GetMapping("/transaction/{id}")
+    // public ResponseEntity<List<Transaction>> getTransactions(@PathVariable("id") Long id){
 
-        Account a = bank.getAccountList().stream().filter(account -> account.getNumber() == id).findFirst().orElse(null);
+    //     Account a = bank.getAccountList().stream().filter(account -> account.getNumber() == id).findFirst().orElse(null);
 
-        if(a != null) {
+    //     if(a != null) {
 
-            return new ResponseEntity<>(a.getTransactions(), HttpStatus.OK);
+    //         return new ResponseEntity<>(a.getTransactions(), HttpStatus.OK);
 
-        }else{
+    //     }else{
 
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-        }
+    //         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    //     }
         
-    }
+    // }
 
     @PostMapping(value = "/transaction/{operation}/{amount}")
     public ResponseEntity<Transaction> perfomTransaction(@RequestBody Account inputAccount, @PathVariable String operation, long amount){
 
         Operation op = Operation.valueOf(operation);
-        Account currentAccount = bank.getAccountList().stream().filter(account -> account.getNumber() == inputAccount.getNumber()).findFirst().orElse(null);
+        
+        Account currentAccount = operationServiceImp.getAccount(bank, inputAccount.getNumber());
 
-        if(currentAccount != null){
 
-            Transaction transaction = new Transaction(op, amount, new Date());
+        Transaction transaction = new Transaction(op, amount, new Date());
+        operationServiceImp.setTransaction(transaction);
 
-            switch (op) {
+        switch (op) {
             case DEPOSIT:
                 operationServiceImp.save(currentAccount);
-                currentAccount.getTransactions().add(transaction);
                 break;
             case WITHDRAW:
                 operationServiceImp.withdraw(currentAccount);
-                currentAccount.getTransactions().add(transaction);
             case CONSULT:
-                 operationServiceImp.consult(currentAccount);
-                 currentAccount.getTransactions().add(transaction);
-                 break;
+                operationServiceImp.consult(currentAccount);
+                break;
             case HISTORY:
                 operationServiceImp.showHistory(currentAccount);
-                currentAccount.getTransactions().add(transaction);
                 break;
             default:
                 break;
         }
-
         return new ResponseEntity<>(transaction, HttpStatus.OK);
-
-        }
-     
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-
-
-
     }
 
-
-
-
-
-
-
-
-
-
-
-    
 }
