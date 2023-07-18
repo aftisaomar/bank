@@ -5,12 +5,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AccountNotFoundException extends RuntimeException {
+public class RessourceNotFound extends RuntimeException {
 
 
     private String message;
 
-    public AccountNotFoundException(String message){
+    public RessourceNotFound(String message){
         this.message = message;
     }    
 }

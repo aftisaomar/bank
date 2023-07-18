@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kata.bank.model.Account;
@@ -87,7 +86,7 @@ public class OperationController {
     // }
 
     @PostMapping(value = "/transaction/{operation}/{amount}")
-    public ResponseEntity<Transaction> perfomTransaction(@RequestBody Account inputAccount, @PathVariable String operation, long amount){
+    public ResponseEntity<Transaction> perfomTransaction(@RequestBody Account inputAccount, @PathVariable String operation, @PathVariable long amount){
 
         Operation op = Operation.valueOf(operation);
         
@@ -114,5 +113,59 @@ public class OperationController {
         }
         return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
+
+
+    @PostMapping("/transaction/save/{amount}")
+    public ResponseEntity<Account> saveMoney(@RequestBody Account account, @PathVariable long amount){
+
+        Account currentAccount = operationServiceImp.getAccount(bank, account.getNumber());
+        Transaction currentTansaction = new Transaction(Operation.DEPOSIT, amount, new Date());
+
+        operationServiceImp.setTransaction(currentTansaction);
+        operationServiceImp.save(currentAccount);
+
+        return new ResponseEntity<Account>(currentAccount, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/transaction/get/{amount}")
+    public ResponseEntity<Account> getMoney(@RequestBody Account account, @PathVariable long amount) {
+
+        Account currentAccount = operationServiceImp.getAccount(bank, account.getNumber());
+        Transaction currentTansaction = new Transaction(Operation.WITHDRAW, amount, new Date());
+
+        operationServiceImp.setTransaction(currentTansaction);
+        operationServiceImp.withdraw(currentAccount);
+
+        return new ResponseEntity<Account>(currentAccount, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/transaction/consult/{id}")
+    public ResponseEntity<Account> consultAccount(@PathVariable long id){
+
+
+        Account currentAccount = operationServiceImp.getAccount(bank, id);
+        Transaction currentTansaction = new Transaction(Operation.CONSULT, 0, new Date());
+
+        operationServiceImp.setTransaction(currentTansaction);
+        operationServiceImp.consult(currentAccount);
+
+        return new ResponseEntity<Account>(currentAccount, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/transaction/history/{id}")
+    public ResponseEntity<List<Transaction>> getHistory(@PathVariable long id){
+
+        Account currentAccount = operationServiceImp.getAccount(bank, id);
+        Transaction currentTansaction = new Transaction(Operation.HISTORY, 0, new Date());
+
+        operationServiceImp.setTransaction(currentTansaction);
+        return new ResponseEntity<List<Transaction>>(operationServiceImp.showHistory(currentAccount), HttpStatus.OK);
+
+    }
+
+
 
 }

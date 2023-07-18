@@ -1,6 +1,5 @@
 package com.kata.bank.exception;
 
-import org.aspectj.bridge.Message;
 
 import lombok.Getter;
 import lombok.Setter;

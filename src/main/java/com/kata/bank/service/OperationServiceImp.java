@@ -1,6 +1,5 @@
 package com.kata.bank.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,7 +8,6 @@ import com.kata.bank.exception.InsufficientSoldException;
 import com.kata.bank.exception.RessourceNotFound;
 import com.kata.bank.model.Account;
 import com.kata.bank.model.Bank;
-import com.kata.bank.model.Operation;
 import com.kata.bank.model.Transaction;
 
 import lombok.Data;

@@ -19,6 +19,14 @@ public class Transaction {
         this.date=date;
     }
 
+    public Transaction(Operation op, Date date){
+
+        this.op = op;
+        this.date = date;
+
+
+    }
+
 
     public String toString(){
 

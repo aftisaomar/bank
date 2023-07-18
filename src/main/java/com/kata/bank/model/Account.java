@@ -3,8 +3,7 @@ package com.kata.bank.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kata.bank.service.OperationService;
-import com.kata.bank.service.OperationServiceImp;
+
 
 import lombok.Getter;
 import lombok.Setter;
