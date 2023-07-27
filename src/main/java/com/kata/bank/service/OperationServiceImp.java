@@ -16,13 +16,17 @@ import lombok.Data;
 @Service
 public class OperationServiceImp implements OperationService {
 
-    private Transaction transaction;
 
+    private Transaction transaction;
 
     public OperationServiceImp(Transaction transaction){
 
         this.transaction = transaction;
 
+    }
+
+    public OperationServiceImp(){
+        
     }
 
     @Override
@@ -59,7 +63,6 @@ public class OperationServiceImp implements OperationService {
         
         account.getTransactions().add(this.transaction);
         return account.getTransactions();
-        
         
     }
 
