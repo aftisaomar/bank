@@ -44,6 +44,13 @@ public class OperationServiceTest {
 
     }
 
+    @Test
+    void saveTest(){
+        when(this.transaction.getAmount()).thenReturn(100L);
+        this.op.save(account);
+        assertEquals(250, this.account.getSolde());
+    }
+
 
 
 
